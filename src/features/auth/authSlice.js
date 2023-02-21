@@ -28,9 +28,11 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     try {
         return await authService.login(user)
     } catch (error) {
-        console.log(error)
-        const message = (error.response && error.response.data && error.response.data.message) 
+        let message = (error.response && error.response.data && error.response.data.message) 
             || error.message || error.toString()
+        if(error.response.data.status === 401){
+            message = 'Credenciales inválidas'
+        }
         return thunkAPI.rejectWithValue(message)
     }
 })
